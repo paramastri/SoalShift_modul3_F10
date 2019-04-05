@@ -151,9 +151,48 @@ void* zip1()   {system("zip -rm -j KompresProses1 /home/paramastri/Documents/Fol
 void* zip2()   {system("zip -rm -j KompresProses2 /home/paramastri/Documents/FolderProses2/SimpanProses2.txt");return 0;}
 ```
 
-* Untuk mengekstrak file zip tadi, kami menggunakan 
+* Untuk mengekstrak file zip tadi, kami menggunakan ``unzip /home/paramastri/sisop19/modul3/KompresProses1.zip -d /home/paramastri/sisop19/modul3/``
+
+* Hasil ekstrak (.txt) nya akan muncul di path ``/home/paramastri/sisop19/modul3/`` dimana kami menjalankan soal4.c
+
+Dan perintah tersebut kami mesukkan dalam fungsi system().
 
 ```
 void* unzip1() {system("unzip /home/paramastri/sisop19/modul3/KompresProses1.zip -d /home/paramastri/sisop19/modul3/");return 0;}
 void* unzip2() {system("unzip /home/paramastri/sisop19/modul3/KompresProses2.zip -d /home/paramastri/sisop19/modul3/");return 0;}
 ```
+
+Karena setiap list proses yang di simpan dalam masing-masing file .txt harus berjalan bersama-sama, kami membuat thread dengan memanggil fungsi save1 dan save2, lalu di-join-kan.
+
+```
+pthread_create(&tid[1],NULL,&save1,NULL);
+pthread_create(&tid[2],NULL,&save2,NULL);
+
+pthread_join(tid[1],NULL);
+pthread_join(tid[2],NULL);
+```
+
+Karena ketika mengkompres file .zip juga harus secara bersama-sama. Sehingga, kami membuat thread dengan memanggil fungsi zip1 dan zip2, lalu di-join-kan.
+
+```
+pthread_create(&tid[3],NULL,&zip1,NULL);
+pthread_create(&tid[4],NULL,&zip2,NULL);
+
+pthread_join(tid[3],NULL);
+pthread_join(tid[4],NULL);
+```
+
+Ketika Mengekstrak file .zip juga harus secara bersama-sama. Dan ketika telah Selesai melakukan kompress file .zip masing-masing file, maka program akan memberi pesan “Menunggu 15 detik untuk mengekstrak kembali”.
+
+Sehingga, kami membuat thread dengan memanggil fungsi unzip1 dan unzip2, lalu di-join-kan. Dan tidak lupa memberikan sleep(15). Serta mengeprint pesan “Menunggu 15 detik untuk mengekstrak kembali”.
+
+```
+sleep(15);
+
+pthread_create(&tid[5],NULL,&unzip1,NULL);
+pthread_create(&tid[6],NULL,&unzip2,NULL);
+
+pthread_join(tid[5],NULL);
+pthread_join(tid[6],NULL);
+```
+
