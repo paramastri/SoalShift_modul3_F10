@@ -198,3 +198,6 @@ pthread_join(tid[5],NULL);
 pthread_join(tid[6],NULL);
 ```
 
+Pada gambar di bawah ini, dapat dilihat setelah program dijalankan, dia akan memngompres dan mengekstrak (ditunggu 15 detik). Dan dapat dilihat juga file original pada Documents/FolderProses1 dan Documents/FolderProses2 sudah terhapus otomatis.
+
+![alt text](https://github.com/paramastri/SoalShift_modul3_F10/blob/master/4.PNG)
