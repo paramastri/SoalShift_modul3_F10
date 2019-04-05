@@ -28,6 +28,8 @@ pthread_create(&tid[4],NULL,&zip2,NULL);
 pthread_join(tid[3],NULL);
 pthread_join(tid[4],NULL);
 
+printf("Menunggu 15 detik untuk mengekstrak kembali\n");
+  
 sleep(15);
 
 pthread_create(&tid[5],NULL,&unzip1,NULL);
