@@ -100,3 +100,60 @@ Terakhir, gunakan variabel x tadi untuk iterasi pembuatan threadnya. Jangan lupa
 	 	pthread_join(input[x], NULL);
 	}
 ```
+
+
+## 4. Simpan, Zip, Unzip
+#### Penjelasan
+##### Soal:
+Buatlah sebuah program C dimana dapat menyimpan list proses yang sedang berjalan (ps -aux) maksimal 10 list proses. Dimana awalnya list proses disimpan dalam di 2 file ekstensi .txt yaitu  SimpanProses1.txt di direktori /home/Document/FolderProses1 dan SimpanProses2.txt di direktori /home/Document/FolderProses2 , setelah itu masing2 file di  kompres zip dengan format nama file KompresProses1.zip dan KompresProses2.zip dan file SimpanProses1.txt dan SimpanProses2.txt akan otomatis terhapus, setelah itu program akan menunggu selama 15 detik lalu program akan mengekstrak kembali file KompresProses1.zip dan KompresProses2.zip 
+
+Dengan Syarat : 
+* Setiap list proses yang di simpan dalam masing-masing file .txt harus berjalan bersama-sama
+* Ketika mengkompres masing-masing file .txt harus berjalan bersama-sama
+* Ketika Mengekstrak file .zip juga harus secara bersama-sama
+* Ketika Telah Selesai melakukan kompress file .zip masing-masing file, maka program akan memberi pesan “Menunggu 15 detik untuk mengekstrak kembali”
+* Wajib Menggunakan Multithreading
+* Boleh menggunakan system
+
+
+##### Solusi:
+
+Pertama, kita deklarasikan variabel global untuk threadnya misal tid[6]. Disini kami memberi nilai array 6 karena akan ada 6 thread yang akan kami buat.
+
+```
+pthread_t tid[6];
+```
+Pada main program, terdapat fungsi-fungsi yang akan menjalankan perintah-perintah sesuai pada soal.
+
+* Untuk menyimpan list proses yang sedang berjalan (ps -aux) maksimal 10 list proses, kami menggunakan ``ps -aux | head -n 10``
+
+* Untuk menyimpan di 2 file ekstensi .txt yaitu SimpanProses1.txt di direktori /home/Document/FolderProses1 dan SimpanProses2.txt di direktori /home/Document/FolderProses2, kami menggunakan ``> /home/paramastri/Documents/FolderProses1/SimpanProses1.txt``
+
+Dan perintah-perintah tersebut kami mesukkan dalam fungsi system().
+
+```
+void* save1()  {system("ps -aux | head -n 10 > /home/paramastri/Documents/FolderProses1/SimpanProses1.txt");return 0;}
+void* save2()  {system("ps -aux | head -n 10 > /home/paramastri/Documents/FolderProses2/SimpanProses2.txt");return 0;}
+```
+
+* Untuk membuat masing2 file di kompres zip dengan format nama file KompresProses1.zip dan KompresProses2.zip dan file SimpanProses1.txt dan SimpanProses2.txt akan otomatis terhapus, kami menggunakan ``zip -rm -j KompresProses1 /home/paramastri/Documents/FolderProses1/SimpanProses1.txt``
+
+-rm digunakan supaya kedua file .txt tadi otomatis terhapus setelah di zip.
+
+-j sebagai junk yang membuang direktori. Jadi, sebelum kami beri -j, file zip ketika melalui proses unzip, mereka akan membuat folder sesuai dengan direktori ``/home/paramastri/Documents/FolderProses1/SimpanProses1.txt`` dan menyimpan hasil ekstrak pada direktori tersebut. Untuk itu, kami memberi command -j ini.
+
+* Hasil file zip kami akan muncul pada direktori dimana soal4.c dijalankan.
+
+Dan perintah-perintah tersebut kami mesukkan dalam fungsi system().
+
+```
+void* zip1()   {system("zip -rm -j KompresProses1 /home/paramastri/Documents/FolderProses1/SimpanProses1.txt");return 0;}
+void* zip2()   {system("zip -rm -j KompresProses2 /home/paramastri/Documents/FolderProses2/SimpanProses2.txt");return 0;}
+```
+
+* Untuk mengekstrak file zip tadi, kami menggunakan 
+
+```
+void* unzip1() {system("unzip /home/paramastri/sisop19/modul3/KompresProses1.zip -d /home/paramastri/sisop19/modul3/");return 0;}
+void* unzip2() {system("unzip /home/paramastri/sisop19/modul3/KompresProses2.zip -d /home/paramastri/sisop19/modul3/");return 0;}
+```
