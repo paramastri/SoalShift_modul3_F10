@@ -187,6 +187,8 @@ Ketika Mengekstrak file .zip juga harus secara bersama-sama. Dan ketika telah Se
 Sehingga, kami membuat thread dengan memanggil fungsi unzip1 dan unzip2, lalu di-join-kan. Dan tidak lupa memberikan sleep(15). Serta mengeprint pesan “Menunggu 15 detik untuk mengekstrak kembali”.
 
 ```
+printf("Menunggu 15 detik untuk mengekstrak kembali\n");
+  
 sleep(15);
 
 pthread_create(&tid[5],NULL,&unzip1,NULL);
