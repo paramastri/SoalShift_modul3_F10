@@ -101,6 +101,7 @@ Terakhir, gunakan variabel x tadi untuk iterasi pembuatan threadnya. Jangan lupa
 	}
 ```
 
+![alt text](https://github.com/paramastri/SoalShift_modul3_F10/blob/master/soal1/1.PNG)
 
 ## 4. Simpan, Zip, Unzip
 #### Penjelasan
