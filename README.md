@@ -150,6 +150,96 @@ Agmal dan Iraj merupakan 2 sahabat yang sedang kuliah dan hidup satu kostan, say
 
 ###### Solusi:
 * Membuat 2 Thread yang dimana Thread tersebut berisi Kehidupan Agmal dan dan Kehidupan Iraj.
+* Thread Agmal
+```
+void *AgmalAyoBangun(){
+    while(1) {
+        if(choice!=2) {
+            continue;
+        }
+        if(choice==2 && ThreadSleep==2) {
+            printf("\nFitur \"Agmal Ayo Bangun\" tidak bisa dijalankan selama 10 detik\n\n");
+            sleep(10);
+            choice=0;
+            AgmalCount=1;
+            IrajCount=1;
+            ThreadSleep=0;   
+        }
+        else if(choice==2) {
+            WakeUp_Status+=15;
+            printf("\nAgmal Wake Up Status +15\n\n");
+            if(WakeUp_Status>=100) {
+                printf("\nAgmal telah terbangun, mereka bangu pagi dan berolahraga\n");
+                exit(0);
+            }
+            choice=0;
+        }  
+    }
+}
+```
+* Thread Iraj
+```
+void *IrajAyoTidur(){
+    while(1) {
+        if(choice!=3) {
+            continue;
+        }
+        if(choice==3 && ThreadSleep==1) {
+            printf("\nFitur \"Iraj Ayo Tidur\" tidak bisa dijalankan selama 10 detik\n\n");
+            sleep(10);
+            choice=0;
+            AgmalCount=1;
+            IrajCount=1;
+            ThreadSleep=0;
+        }
+        else if(choice==3) {
+            Spirit_Status-=20;
+            printf("\nIraj Spirit Status -20\n\n");
+            if(Spirit_Status<=0) {
+                printf("\nIraj ikut tidur, dan bangun kesiangan bersama Agmal\n");
+                exit(0);
+            }
+            choice=0;
+        }   
+    }
+}
+```
+* Membuat sebuah Interface untuk menjalankan Program Mereka serta melihat kedua status mereka. 
+```
+void Menu(){
+    while(1) {
+        char input[1024];
+        gets(input);
+
+        if(!strcmp(input,"Status")) {
+            Status();
+        }
+        else if(!strcmp(input,"Agmal Ayo Bangun")) {
+            choice=2;
+            if(AgmalCount!=0 && AgmalCount%3==0) {
+                ThreadSleep=1;
+                printf("\nFitur \"Iraj Ayo Tidur\" tidak bisa dijalankan selama 10 detik\n");
+            }
+            IrajCount=0;
+            AgmalCount+=1;
+
+           
+        }
+        else if(!strcmp(input,"Iraj Ayo Tidur")) {
+            choice=3;
+            if(IrajCount!=0 && IrajCount%3==0) {
+                ThreadSleep=2;
+                printf("\nFitur \"Agmal Ayo Bangun\" tidak bisa dijalankan selama 10 detik\n");
+            }
+            IrajCount++;
+            AgmalCount=0;
+        }
+        else {
+            printf("\nInput Salah\n\n");
+        }
+    }
+}
+```
 
 
 
