@@ -41,27 +41,27 @@ char getch(void)
   return getch_(0);
 }
 
-int *jumMakan;
-pthread_t tid[2];
+int *maem_shop;
+pthread_t thread[2];
 
-void* awal (void* arg)
+void* shop_ini (void* arg)
 {
     key_t key = 1234;
 
     int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
-    jumMakan = shmat(shmid, NULL, 0);
+    maem_shop = shmat(shmid, NULL, 0);
   
-    *jumMakan = 0;
+    *maem_shop = 0;
 
 }
 
-void* menutoko (void* arg)
+void* shopping (void* arg)
 {
     while(1)
     {
         system("clear");
         printf("Shop\n");
-        printf("Food Stock : %d\n",*jumMakan);
+        printf("Food Stock : %d\n",*maem_shop);
         printf("Choice : \n");
         printf("1. Restock\n");
         printf("2. Exit\n");
@@ -71,17 +71,17 @@ void* menutoko (void* arg)
 }
 void main()
 {
-    pthread_create(&(tid[0]),NULL,awal,NULL);
-    pthread_create(&(tid[1]),NULL,menutoko,NULL);
-    char pil;
+    pthread_create(&(thread[0]),NULL,shop_ini,NULL);
+    pthread_create(&(thread[1]),NULL,shopping,NULL);
+    char choose;
     while(1)
     {
-        pil=getch();
-        if(pil=='1')
+        choose=getch();
+        if(choose=='1')
         {
-            *jumMakan = *jumMakan + 1;
+            *maem_shop = *maem_shop + 1;
         }
-        else if(pil=='2')
+        else if(choose=='2')
         {
             break;
         }
