@@ -122,10 +122,63 @@ Pada suatu hari ada orang yang ingin berjualan 1 jenis barang secara private, di
 ##### Solusi:
 Pertama, Membuat sebuah server yaitu untuk Pembeli dan Penjual.
 Kedua server ini harus terhubung dengan masing-masing client agar mereka dapat melakukan suatu transaksi, diberikan 2 Client yaitu untuk pembeli dan Penjual.
-Server Penjual dapat melakukan Penambahan Stock
 
-Server Pembeli dapat melakukan pembelian sehingga terjadi Pengurangan Stock 
+Server Penjual dapat melakukan Penambahan Stock.
+diberikan sebuah thread guna mencetak keterangan stock barang dan mengecek apabila client penjual melakukan penambahan stock  
+```
+void* cek (void* arg)
+{
+        if(strcmp(buffer,"tambah")==0)
+        {
+                *stok = *stok + 1;
+        }
+        
+        memset(buffer, 0, 1024);
+}
 
+void* cetak (void* arg)
+{
+    while(1)
+    {
+        printf("Stock barang %d\n",*stok);
+        sleep(5);
+    }
+    
+}
+```
+
+Server Pembeli dapat melakukan pembelian sehingga terjadi Pengurangan Stock.
+diberikan thread untuk mengecek apakah client pembeli melakukan pembelian, sekaligus memberi notifikasi transaksi tersebut
+```
+void* cek (void* arg)
+{
+    char *pesangagal = "transaksi gagal";
+    char *pesansukses = "transaksi berhasil";
+    char *pesangagal1 = "perintah salah";
+    if(strcmp(buffer,"beli")==0)
+    {
+        if(*stok > 0)
+        {
+            *stok = *stok - 1;
+            printf("%s\n",pesansukses);
+            send(new_socket , pesansukses , strlen(pesansukses) , 0 );
+        }
+        else
+        {
+            printf("%s\n",pesangagal);
+            send(new_socket , pesangagal , strlen(pesangagal) , 0 );
+        }
+    }
+    else
+    {
+        printf("%s\n",pesangagal1);
+        send(new_socket , pesangagal1 , strlen(pesangagal1) , 0 );
+    }
+        
+    memset(buffer, 0, 1024);
+}
+```
+Client Pembeli dan Penjual hanya sebagai penginput String yang String tersebut dicek pada masing-masing servernya.
 
 ## 3. Thread Kehidupan Agmal dan Iraj
 #### Penjelasan
