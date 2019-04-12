@@ -480,3 +480,358 @@ Pastikan terminal hanya mendisplay status detik ini sesuai scene terkait (hint: 
 
 ##### Solusi:
 
+Ada library tambahan yaitu ``#include<termios.h>``. Gunanya untuk mendeteksi input keypress.
+
+```
+static struct termios old, new;
+/* Initialize new terminal i/o settings */
+void initTermios(int echo)
+{
+  tcgetattr(0, &old); /* grab old terminal i/o settings */
+  new = old; /* make new settings same as old settings */
+  new.c_lflag &= ~ICANON; /* disable buffered i/o */
+  if (echo) {
+      new.c_lflag |= ECHO; /* set echo mode */
+  } else {
+      new.c_lflag &= ~ECHO; /* set no echo mode */
+  }
+  tcsetattr(0, TCSANOW, &new); /* use these new terminal i/o settings now */
+}
+
+/* Restore old terminal i/o settings */
+void resetTermios(void)
+{
+  tcsetattr(0, TCSANOW, &old);
+}
+char getch_(int echo)
+{
+  char ch;
+  initTermios(echo);
+  ch = getchar();
+  resetTermios();
+  return ch;
+}
+
+/* Read 1 character without echo */
+char getch(void)
+{
+  return getch_(0);
+}
+```
+
+Kita deklarasikan variabel dan nilainya.
+
+```
+char monster[800];
+int Hung_Stat=200;
+int Hyg_Stat=100;
+int Health_Stat=300;
+int det_mandi=20;
+int det_health=10;
+int det_hyg=30;
+int det_hung=10;
+int langsung_mandi=0;
+int jeda=0;
+pthread_t thread[7];
+char choose;
+int maem_monster=0;
+void* tampilan_asli(void*);
+```
+
+Fungsi void dibawah ini adalah untuk memenuhi syarat monster pemain memiliki hunger status yang berawal dengan nilai 200 (maksimalnya) dan nanti akan berkurang 5 tiap 10 detik.
+
+Detik kelaparannya yang dideklarasikan awal 10, apabila tidak memenuhi if(det_hung==1) maka dia di-decreament hingga detiknya kembali ke 1, maka memenuhi if(det_hung==1) dan direset lagi menjadi 10 serta Hungry Statusnya berkurang 5.
+```
+void* laper (void *ptr)
+{
+    while(1)
+    {
+        // sleep(10);
+        while(jeda!=0)
+        {
+
+        }
+        sleep(1);
+        if(det_hung==1)
+        {
+        	// berkurang 5 tiap 10 det_hungry
+            det_hung=10;
+            Hung_Stat-=5;
+        }
+        else det_hung-=1;
+        if(jeda==0)
+        {
+
+
+            if(Hung_Stat<=0) // hunger status = 0
+            {
+                printf("Kelaperan. Mati deh :(\n");
+                exit(EXIT_FAILURE);
+            }
+
+        }
+
+
+    }
+}
+
+```
+
+Fungsi void dibawah ini adalah untuk memenuhi syarat monster pemain memiliki hygiene status yang berawal dari 100 dan nanti berkurang 10 tiap 30 detik. 
+
+Detik kelaparannya yang dideklarasikan awal 30, apabila tidak memenuhi if(det_hyg==1) maka dia di-decreament hingga detiknya kembali ke 1, maka memenuhi if(det_hyg==1) dan direset lagi menjadi 10 serta Hygiene Statusnya berkurang 10.
+
+```
+void* hyginis (void *ptr)
+{
+    while(1)
+    {
+        // sleep(30);
+        while(jeda!=0)
+        {
+
+        }
+        sleep(1);
+        if(det_hyg==1)
+        {
+            det_hyg=30;
+            Hyg_Stat-=10;
+        }
+        else det_hyg-=1;
+        if(jeda==0)
+        {
+
+            if(Hyg_Stat<=0)
+            {
+                printf("Kotor banget. Monster dah mati\n");
+                exit(EXIT_FAILURE);
+            }
+        }
+
+    }
+}
+
+```
+
+Fungsi void dibawah ini adalah untuk memenuhi syarat monster pemain memiliki health status yang berawal dengan nilai 300. Variabel ini bertambah (regenerasi) 5 setiap 10 detik ketika monster dalam keadaan standby.
+
+
+Detik kelaparannya yang dideklarasikan awal 30, apabila tidak memenuhi if(det_health==1) maka dia di-increament hingga detiknya kembali ke 1, maka memenuhi if(det_health==1) dan direset lagi menjadi 10 serta Hygiene Statusnya bertambah 5.
+
+```
+void* sehat (void *ptr)
+{
+    while(1)
+    {
+        while(jeda!=0)
+        {
+
+        }
+        sleep(1);
+        if(det_health==1)
+        {
+            det_health=10;
+            Health_Stat+=5;
+        }
+        else det_health-=1;
+        if(jeda==0)
+        {
+
+
+            if(Health_Stat<=0)
+            {
+                printf("Monster mati. Sakit-sakitan sih\n");
+                exit(EXIT_FAILURE);
+            }
+
+        }
+
+    }
+}
+```
+Ketika hygiene status mencapai angka nol, pemain akan kalah. Hygiene status' dapat bertambah 30 hanya dengan memandikan monster. Pemain dapat memandikannya setiap 20 detik (cooldownnya 20 detik).
+
+```
+void* itungan_mandi (void *ptr)
+{
+    while(1)
+    {
+        while(jeda!=0)
+        {
+
+        }
+        if(langsung_mandi==0)
+        {
+            sleep(1);
+            if(det_mandi==0)
+            {
+                det_mandi=20;
+                langsung_mandi=1;
+            }
+            else det_mandi-=1;
+        }
+
+    }
+}
+```
+Untuk build fitur shop, kami menggunakan shared memory
+```
+int *maem_shop;
+void* ini_shop (void* arg){
+    key_t key = 1234;
+
+
+    int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
+    maem_shop = shmat(shmid, NULL, 0);
+
+    *maem_shop = 0;
+}
+```
+
+Thread-thread yang dibuat:
+```
+    pthread_create(&(thread[0]),NULL,laper,NULL);
+    pthread_create(&(thread[1]),NULL,hyginis,NULL);
+    pthread_create(&(thread[2]),NULL,sehat,NULL);
+    pthread_create(&(thread[3]),NULL,itungan_mandi,NULL);
+    pthread_create(&(thread[4]),NULL,tampilan_asli,NULL);
+    pthread_create(&(thread[5]),NULL,ini_shop,NULL);
+    pthread_create(&(thread[6]),NULL,tampilan_food,NULL);
+```
+
+Apabila pemain memilih fitur 1 yaitu Eat, hungry status akan bertambah 15 sementara stok makanan kita berkurang.
+
+```
+if(choose=='1')
+        {
+            if(maem_monster>0)
+            {
+                Hung_Stat+=15;
+                maem_monster--;
+                if(Hung_Stat>200)
+	            {
+	                Hung_Stat=200;
+	            }
+            }
+
+        }
+```
+Apabila pemain memilih fitur 2 yaitu Bath, hygiene status akan bertambah 30.
+```
+ else if(choose=='2')
+        {
+            if(langsung_mandi==1)
+            {
+                Hyg_Stat+=30;
+                if(Hyg_Stat>100)
+                {
+                    Hyg_Stat=100;
+                }
+                langsung_mandi=0;
+            }
+
+        }
+```
+
+Apabila memilih 3 untuk fitur battle, setiap kita memilih attack, status kesehatan lawan dan kita berkurang 20.
+
+```
+ else if(choose=='3')
+        {
+            int statusLawan=100;
+            jeda=1;
+            while(1)
+            {
+                system("clear");
+                printf("Battle Mode\n");
+                printf("Monster's Health : %d\n",Health_Stat);
+                printf("Enemy's Health : %d\n",statusLawan);
+                printf("Choices\n");
+                printf("1. Attack\n");
+                printf("2. Run\n");
+                char pilih;
+                pilih = getch();
+                if(pilih=='1')
+                {
+                    if(Health_Stat>0 && statusLawan>0)
+                    {
+                        Health_Stat-=20;
+                        if(statusLawan>0)
+                        {
+                            statusLawan-=20;
+                        }
+                    }
+                    if(Health_Stat<0)
+                    {
+                        Health_Stat=0;
+                        jeda=0;
+                        break;
+                    }
+                    else if(statusLawan<0)
+                    {
+                        statusLawan=0;
+                    }
+                }
+                else if(pilih=='2')
+                {
+                    jeda=0;
+                    break;
+                }
+
+
+            }
+        }
+```
+
+Apabila memilih 4 untuk fitur shop, akan dijeda ke menu shop yang jika kita pilih Buy akan menambah stok makanan kita dan mengurangi stok makanan toko
+```
+ else if(choose=='4')
+        {
+            jeda=2;
+            char pilih;
+            while(1)
+            {
+                pilih = getch();
+                if(pilih=='1')
+                {
+                    if(*maem_shop > 0)
+                    {
+                        *maem_shop = *maem_shop - 1;
+                        maem_monster++;
+                    }
+
+                }
+                else if(pilih=='2')
+                {
+                    jeda=0;
+                    break;
+                }
+
+
+            }
+        }
+```
+
+Yang terakhir jika memilih 5, program akan keluar
+
+```
+else if(choose=='5')
+        {
+            system("clear");
+            printf("Thanks for playing!\n");
+            exit(EXIT_FAILURE);
+            break;
+        }
+```
+
+Jangan lupa menjoinkan threadnya
+
+```
+pthread_join(thread[0],NULL);
+    pthread_join(thread[1],NULL);
+    pthread_join(thread[2],NULL);
+    pthread_join(thread[3],NULL);
+    pthread_join(thread[4],NULL);
+    pthread_join(thread[5],NULL);
+    pthread_join(thread[6],NULL);
+```
