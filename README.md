@@ -835,3 +835,55 @@ pthread_join(thread[0],NULL);
     pthread_join(thread[5],NULL);
     pthread_join(thread[6],NULL);
 ```
+Untuk soal5shop.c yang berguna memunculkan menu restock makanan dengan shared memory, berikut penjabarannya.
+
+Pertama diberikan juga library tambahan yaitu ``#include<termios.h>``. Gunanya untuk mendeteksi input keypress. Dan juga diikuti dengan template fungsi-fungsi termios lainnya.
+
+Fungsi untuk shared memory seperti di soal5.c
+
+```
+void* shop_ini (void* arg)
+{
+    key_t key = 1234;
+
+    int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
+    maem_shop = shmat(shmid, NULL, 0);
+  
+    *maem_shop = 0;
+
+}
+```
+
+Fungsi untuk interface menu shopnya
+
+```
+void* shopping (void* arg)
+{
+    while(1)
+    {
+        system("clear");
+        printf("Shop\n");
+        printf("Food Stock : %d\n",*maem_shop);
+        printf("Choice : \n");
+        printf("1. Restock\n");
+        printf("2. Exit\n");
+        sleep(1);
+    }
+
+}
+```
+Ketika memilih poin 1 yaitu Restock, stok makanan di toko akan bertambah. Yang dimana nantinya akan bisa dibeli pada shop menu di soal5.c
+```
+while(1)
+    {
+        choose=getch();
+        if(choose=='1')
+        {
+            *maem_shop = *maem_shop + 1;
+        }
+        else if(choose=='2')
+        {
+            break;
+        }
+    }
+```
