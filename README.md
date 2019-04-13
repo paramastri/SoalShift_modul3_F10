@@ -397,7 +397,7 @@ Pada gambar di bawah ini, dapat dilihat setelah program dijalankan, dia akan mem
 ![alt text](https://github.com/paramastri/SoalShift_modul3_F10/blob/master/soal4/4.PNG)
 
 
-## 4. Monster
+## 5. Monster
 #### Penjelasan
 ##### Soal:
 Angga, adik Jiwang akan berulang tahun yang ke sembilan pada tanggal 6 April besok. Karena lupa menabung, Jiwang tidak mempunyai uang sepeserpun untuk membelikan Angga kado. Kamu sebagai sahabat Jiwang ingin membantu Jiwang membahagiakan adiknya sehingga kamu menawarkan bantuan membuatkan permainan komputer sederhana menggunakan program C. Jiwang sangat menyukai idemu tersebut. Berikut permainan yang Jiwang minta. 
