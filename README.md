@@ -896,3 +896,34 @@ while(1)
         }
     }
 ```
+
+* Memberi nama monster
+
+
+![alt text](https://github.com/paramastri/SoalShift_modul3_F10/blob/master/soal5/5-nama.PNG)
+
+
+* Standby Mode
+
+
+![alt text](https://github.com/paramastri/SoalShift_modul3_F10/blob/master/soal5/5-standby.PNG)
+
+
+* Shop menu (shared memory implementation)
+
+
+![alt text](https://github.com/paramastri/SoalShift_modul3_F10/blob/master/soal5/5-food.PNG)
+
+![alt text](https://github.com/paramastri/SoalShift_modul3_F10/blob/master/soal5/5-food-2.PNG)
+
+
+* Battle Mode
+
+
+![alt text](https://github.com/paramastri/SoalShift_modul3_F10/blob/master/soal5/5-battle.PNG)
+
+
+* Bath is ready
+
+
+![alt text](https://github.com/paramastri/SoalShift_modul3_F10/blob/master/soal5/5-bath.PNG)
