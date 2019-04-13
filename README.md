@@ -14,7 +14,7 @@ Oleh:
 * [1. Faktorial](#1-faktorial)
 * [2. Penjual Pembeli yang Terintegrasi secara Online](#2-penjual-pembeli-yang-terintegrasi-secara-online)
 * [3. Thread Kehidupan Agmal dan Iraj](#3-thread-kehidupan-agmal-dan-iraj)
-* [4. Simpan, Zip, Unzip](#4-simpan,-zip,-unzip)
+* [4. Simpan, Zip, Unzip](#4-simpan-zip-unzip)
 * [5. Monster](#5-monster)
 
 
